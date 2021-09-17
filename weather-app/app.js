@@ -67,6 +67,7 @@ gecoding(address,(err,res)=>{
         }
     });
 })
+
 }
     // console.log(res.body.features[0].center[1],res.body.features[0].center[0]);
     // console.log(res.body.features)
