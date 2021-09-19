@@ -4,11 +4,15 @@ const path=require('path');
 const port=8000;
 
 const app=express();
-const publicPath=path.join(__dirname,'..\\..\\public');
-// console.log(publicPath)
+const publicPath=path.join(__dirname,'..\\..');
+app.set('view engine', 'hbs');
+app.set('views',path.join(__dirname,'..\\..\\views\\template'))
+// console.log(pa)
 app.use(express.static(publicPath));
 
-
+app.get('',(req, res)=>{
+    res.render('index')
+});
 // app.get('/', (req, res) => {
 
 //     console.log("parsed")
@@ -18,7 +22,7 @@ app.get('/name', (req, res) => {
 
     // console.log("parsed")
     // res.send("Abu Bakr was the first caliph of ummah.")
-    console.log(req)
+    // console.log(req)
     const n=["kashif","aquib","suhail","faisal","anzer","monis","jameel"]
     res.send(n);
 })
@@ -35,5 +39,6 @@ app.get('*', (req, res) => {
 
 app.listen(port,()=>{
     console.log('listening on port')
+    // console.log(publicPath)
+    // console.log(pa)
 })
-
