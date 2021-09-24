@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="public/css/style.css">
     
 </head>
 <body>
@@ -15,15 +15,16 @@
    <h2>Check Weather Here</h2>
 
    <div>
-       {{!-- <form id="frm"> --}}
+       <form>
            <input type="text" placeholder="Enter address">
            <br><br>
            <button id="btn">Show Weather</button>
-       {{!-- </form> --}}
+       </form>
        <h4 id="result"></h4>
    </div>
         {{>footer}}
     
+    <script type="text/javascript" src="public/js/index.js"></script>
 </body>
-<script src="js/index.js"></script>
+
 </html>

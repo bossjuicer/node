@@ -1,6 +1,8 @@
 const express=require('express');
 const path=require('path');
 const hbs=require('hbs');
+const gecoding=require('./gecoding');
+const forecast=require('./forecast');
 
 const port=8000;
 
@@ -42,6 +44,44 @@ app.get('/weather',(req, res)=>{
 //     const n=["kashif","aquib","suhail","faisal","anzer","monis","jameel"]
 //     res.send(n);
 // })
+
+app.get('/gw',(req, res)=>{
+    if (!req.query.address){
+        res.send({
+        error:"Please provide an valid address",
+    });
+    
+    return;
+}
+    gecoding(req.query.address,(err,res)=>{
+    if (err){
+        console.log(err);
+        return;
+    }
+    let lat=res.body.features[0].center[1];
+    let long=res.body.features[0].center[0]
+    let place=res.body.features[0].place_name;
+    // console.log(res.body.features)
+    // console.log(`The place is ${place}`)
+    // res.send({p:`The place is ${place}`})
+    forecast(lat,long,(err,response)=>{
+        if (err){
+            console.log(err);
+            return;
+        }
+        
+        res.send({
+            temp:response,
+        });
+        
+    });
+})
+
+    // res.send({w:"Sunny in Raja Ka Tajpur"});
+    
+});
+
+
 app.get('/html', (req, res) => {
 
     // console.log("parsed")
@@ -50,7 +90,7 @@ app.get('/html', (req, res) => {
 app.get('*', (req, res) => {
 
     // console.log("parsed")
-    res.send("<h1>404 Error Not Found</h1>")
+    res.send("404 Error Not Found")
     // console.log(app.set('views',path.join(__dirname,'..\\..\\views\\template')))
 })
 
