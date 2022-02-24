@@ -1,7 +1,10 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = "secret";
 
-const User = mongoose.model("User", {
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -31,6 +34,31 @@ const User = mongoose.model("User", {
         throw new Error("password cannot be password");
     },
   },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
+
+userSchema.pre("save", function (next) {
+  const user = this;
+  if (user.isModified("password")) {
+    user.password = bcrypt.hashSync(user.password, 10);
+  }
+  next();
+});
+userSchema.methods.generateToken = async function () {
+  const user = this;
+  console.log(user);
+  const token = jwt.sign({ _id: user._id.toString() }, JWT_SECRET);
+  user.tokens = [...user.tokens, { token }];
+  await user.save();
+  return token;
+};
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;

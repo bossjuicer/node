@@ -21,4 +21,21 @@ router.post("/task", async (req, res) => {
     res.status(500).send("Task not created..");
   }
 });
+
+router.patch("/task/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const task = await Task.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!task) {
+      res.status(404).send("User nor found");
+      return;
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(500).send("could not update the user");
+  }
+});
 module.exports = router;

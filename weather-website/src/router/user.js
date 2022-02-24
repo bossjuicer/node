@@ -1,9 +1,11 @@
 const express = require("express");
 const User = require("../models/user");
+const auth = require("../middleware/auth");
 require("../db/connect");
+const bcrypt = require("bcrypt");
 const router = new express.Router();
 
-router.get("/user/:id", async (req, res) => {
+router.get("/user/:id", auth, async (req, res) => {
   // res.send("User Got..");
 
   try {
@@ -100,6 +102,23 @@ router.patch("/user/:id", async (req, res) => {
     res.status(201).send(user);
   } catch (err) {
     res.status(500).send("could nor update the user");
+  }
+});
+
+router.post("/user/login", async (req, res) => {
+  try {
+    const email = req.body.email;
+    const password = req.body.password;
+    const user = await User.findOne({ email: email });
+    const isMath = await bcrypt.compare(password, user.password);
+    if (!isMath) {
+      throw new Error("Invalid Credentials!");
+    }
+    const token = await user.generateToken();
+    res.status(200).send({ user, token });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Not able to login!");
   }
 });
 
